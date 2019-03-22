@@ -6,10 +6,15 @@ set -e
 
 usage () {
     echo -e "\nUSAGE: install.sh -i|--iaas <IAAS_NAME> -e|--environment <ENVIRONMENT> -r|--registry <REGISTRY_DNS>\n"
-    echo -e "This utility will install all 'releng' tools using images uploaded to a private registry.\n"
+    echo -e "    This utility will install the 'devops' tools using images and charts uploaded to the"
+    echo -e "    given private registry. It will also deploy Helm's tiller container to the kubernetes"
+    echo -e "    cluster if has not been deployed.\n"
     echo -e "    -i|--iaas <IAAS_NAME>           The underlying IAAS for allocating IAAS specific resource such as persistent volumes."
     echo -e "    -e|--environment <ENVIRONMENT>  The namespace environment to deploy relelease engineering services to."
     echo -e "    -r|--registry <REGISTRY_DNS>    The FQDN or IP of the registry."
+    echo -e "    -t|--tools <PRODUCT_LIST>       Comma separated list of tools to install or uninstall."
+    echo -e "                                    If not provided then all the tools will be deployed."
+    echo -e "    -u|--uninstall                  Uninstalls the tool."
     echo -e ""
 }
 

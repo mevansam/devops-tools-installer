@@ -7,8 +7,9 @@ set -e
 usage () {
     echo -e "\nUSAGE: download.sh -r|--registry <REGISTRY_DNS> \\"
     echo -e "                  -u|--user <USER_NAME> [ -p|--password <PASSWORD> ] [ -c|--clean ]\n"
-    echo -e "This utility will download all required artifacts to set up the release engineering environment and"
-    echo -e "upload them to Harbor. Downloaded images will be saved locally and re-used for off-line installs.\n"
+    echo -e "    This utility will download all required artifacts to set up the devops tools. It will"
+    echo -e "    upload them to a private registry such as Harbor. Downloaded images and charts will"
+    echo -e "    be saved locally and re-used for off-line installs.\n"
     echo -e "    -r|--registry <REGISTRY_DNS>    The FQDN or IP of the registry."
     echo -e "    -u|--user <USER_NAME>           The name of the user to use to authenticate with private registry"
     echo -e "    -p|--password <PASSWORD>        The password of the user."
