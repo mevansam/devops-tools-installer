@@ -15,7 +15,7 @@ usage () {
     echo -e "    -u|--user <USER_NAME>           The name of the user to use to authenticate with private registry"
     echo -e "    -p|--password <PASSWORD>        The password of the user."
     echo -e "    -c|--clean                      Upload clean images."
-    echo -e "    -d|--download-only              Do not connect or upload to a private registy. Downloady only.\n"
+    echo -e "    -d|--download-only              Do not connect and upload to a private registy. Download only.\n"
     echo -e "    Options --registry, --user and --password are required if --download-only flag is not provided\n"
 }
 

@@ -39,7 +39,7 @@ USAGE: download.sh [ -r|--registry <REGISTRY_DNS> ] \
     -u|--user <USER_NAME>           The name of the user to use to authenticate with private registry
     -p|--password <PASSWORD>        The password of the user.
     -c|--clean                      Upload clean images.
-    -d|--download-only              Do not connect or upload to a private registy. Downloady only.
+    -d|--download-only              Do not connect and upload to a private registy. Download only.
 
     Options --registry, --user and --password are required if --download-only flag is not provided
 ```
