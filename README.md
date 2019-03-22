@@ -17,7 +17,7 @@ This repository contains a scripts to deploy a set of common DevOps tools to a K
 
 ```
 USAGE: download.sh -r|--registry <REGISTRY_DNS> \
-                  -u|--user <USER_NAME> [ -p|--password <PASSWORD> ] [ -c|--clean ]
+                   -u|--user <USER_NAME> [ -p|--password <PASSWORD> ] [ -c|--clean ]
 
     This utility will download all required artifacts to set up the devops tools. It will
     upload them to a private registry such as Harbor. Downloaded images and charts will
