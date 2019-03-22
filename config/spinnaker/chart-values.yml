@@ -1,0 +1,31 @@
+---
+initContainerImage: ${registry}/releng/alpine:${alpine_image_version}
+
+logger:
+  image:
+    repository: ${registry}/releng/busybox
+    tag: ${busybox_image_version}
+
+artifactory:
+  name: artifactory
+  image:
+    repository: ${registry}/releng/artifactory-oss
+    version: ${artifactory_image_version}
+  persistence:
+    existingClaim: artifactory
+
+nginx:
+  enabled: true
+  image:
+    repository: ${registry}/releng/nginx-artifactory-pro
+    version: ${artifactory_nginx_image_version}
+
+postgresql:
+  enabled: false
+
+database:
+  type: ${postgresql}
+  host: ${pgsql_host}
+  port: ${pgsql_port}
+  user: ${db_user}
+  password: ${db_password}

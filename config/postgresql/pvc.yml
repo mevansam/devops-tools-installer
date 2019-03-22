@@ -1,0 +1,13 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ${pgsql_instance_name}
+  namespace: ${environment}
+  annotations:
+    volume.beta.kubernetes.io/storage-class: ${pgsql_instance_name}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: ${postgresql_pvc_size}

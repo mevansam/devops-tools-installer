@@ -1,0 +1,13 @@
+---
+image: 
+  registry: ${registry}
+  repository: releng/postgresql
+  tag: ${postgresql_image_version}
+volumePermissions:
+  registry: ${registry}
+  repository: releng/minideb    
+persistence:
+  existingClaim: ${pgsql_instance_name}
+postgresqlUsername: ${db_user}
+postgresqlPassword: ${db_password}
+postgresqlDatabase: ${db_name}

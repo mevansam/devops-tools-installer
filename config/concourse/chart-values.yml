@@ -1,0 +1,148 @@
+---
+image: ${registry}/releng/concourse
+imageTag: ${concourse_image_version}
+web:
+  service:
+    type: LoadBalancer
+persistence:
+  worker:
+    storageClass: concourse-ci
+postgresql:
+  enabled: false
+secrets:
+  # Concourse ATC web SSL
+  webTlsCert: |-
+${concourse_web_tls_cert}
+  webTlsKey: |-
+${concourse_web_tls_key}
+
+  # Concourse ATC DB credentials
+  postgresUser: ${db_user}
+  postgresPassword: ${db_password}
+
+  # Authentication
+  localUsers: ${concourse_local_users}
+  ## Secrets for CF OAuth
+  cfClientId: ${cf_client_id}
+  cfClientSecret: ${cf_client_secret}
+  cfCaCert: ${cf_ca_cert}
+  # Secrets for GitHub OAuth.
+  githubClientId: ${github_client_id}
+  githubClientSecret: ${github_client_secret}
+  githubCaCert: ${github_ca_cert}
+  # Secrets for GitLab OAuth.
+  gitlabClientId: ${gitlab_client_id}
+  gitlabClientSecret: ${gitlab_client_secret}
+  ## Secrets for generic OAuth.
+  oauthClientId: ${oauth_client_id}
+  oauthClientSecret: ${oauth_client_secret}
+  oauthCaCert: ${oauth_ca_cert}
+  # Secrets for LDAP Auth.
+  ldapCaCert:
+
+concourse:
+  web:
+    tls:
+      enabled: true
+    externalUrl: ${concourse_external_url}
+    postgres:
+      host: ${pgsql_host}
+      port: ${pgsql_port}
+      database: ${db_name}      
+    auth:
+      mainTeam: 
+        localUser: ${local_user}
+
+      ## Authentication (CloudFoundry)
+      cf:
+        enabled: ${cf_auth_enabled}
+        ## (Required) The base API URL of your CF deployment. 
+        ## It will use this information to discover information
+        ## about the authentication provider.
+        apiUrl: ${cf_api_url}
+        ## CA Certificate
+        useCaCert: ${cf_use_ca_cert}
+        ## Skip SSL validation
+        skipSslValidation: ${cf_skip_ssl_validation}
+
+      ## Authentication (GitHub)
+      github:
+        enabled: ${github_auth_enabled}
+        ## Hostname of GitHub Enterprise deployment (No scheme, No trailing slash)
+        host: ${github_host}
+        ## CA certificate of GitHub Enterprise deployment
+        useCaCert: ${github_cert}
+
+      ## Authentication (GitLab)
+      gitlab:
+        enabled: ${gitlab_auth_enabled}
+        ## Hostname of Gitlab Enterprise deployment (Include scheme, No trailing slash)
+        host: ${gitlab_host}
+      
+      ## Authentication (OAuth2)
+      oauth:
+        enabled: ${oath_enabled}
+        ## The auth provider name displayed to users on the login page
+        displayName: ${oath_display_name}
+        ## (Required) Authorization URL
+        authUrl: ${oath_auth_url}
+        ## (Required) Token URL
+        tokenUrl: ${oath_token_url}
+        ## UserInfo URL
+        userinfoUrl: ${oath_userinfo_url}
+        ## Any additional scopes that need to be requested during authorization
+        scope: ${oath_scope}
+        ## The groups key indicates which claim to use to map external groups to Concourse teams.
+        groupsKey: ${oath_groups_key}
+        ## CA Certificate
+        useCaCert: ${oath_use_ca_cert}
+        ## Skip SSL validation
+        skipSslValidation: ${oath_skip_ssl_validation}
+
+      ## Authentication (LDAP)
+      ldap:
+        enabled: false
+        ## The auth provider name displayed to users on the login page
+        displayName:
+        ## (Required) The host and optional port of the LDAP server. If port isn't supplied, it will be guessed
+        ## based on the TLS configuration. 389 or 636.
+        host:
+        ## (Required) Bind DN for searching LDAP users and groups. Typically this is a readOnly user.
+        bindDn:
+        ## (Required) Bind Password for the user specified by 'bindDn'
+        bindPw:
+        ## Required if LDAP host does not use TLS.
+        insecureNoSsl:
+        ## Skip certificate verification
+        insecureSkipVerify:
+        ## Start on insecure port, then negotiate TLS
+        startTls:
+        ## CA certificate
+        useCaCert:
+        ## BaseDN to start the search from. For example 'cn=users,dc=example,dc=com'
+        userSearchBaseDn:
+        ## Optional filter to apply when searching the directory. For example '(objectClass=person)'
+        userSearchFilter:
+        ## Attribute to match against the inputted username. This will be translated and combined with the other
+        ## filter as '(<attr>=<username>)'.
+        userSearchUsername:
+        ## Can either be: 'sub'  search the whole sub tree or 'one' - only search one level. Defaults to 'sub'.
+        userSearchScope:
+        ## A mapping of attributes on the user entry to claims. Defaults to 'uid'.
+        userSearchIdAttr:
+        ## A mapping of attributes on the user entry to claims. Defaults to 'mail'.
+        userSearchEmailAttr:
+        ## BaseDN to start the search from. For example 'cn=groups,dc=example,dc=com'
+        groupSearchBaseDn:
+        ## Optional filter to apply when searching the directory. For example '(objectClass=posixGroup)'
+        groupSearchFilter:
+        ## Can either be: 'sub'  search the whole sub tree or 'one' - only search one level. Defaults to 'sub'.
+        groupSearchScope:
+        ## Adds an additional requirement to the filter that an attribute in the group match the user's attribute 
+        ## value. The exact filter being added is: (<groupAttr>=<userAttr value>)
+        groupSearchUserAttr:
+        ## Adds an additional requirement to the filter that an attribute in the group match the user's attribute 
+        ## value. The exact filter being added is: (<groupAttr>=<userAttr value>)
+        groupSearchGroupAttr:
+        ## The attribute of the group that represents its name.
+        groupSearchNameAttr:
