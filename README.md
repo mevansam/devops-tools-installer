@@ -5,11 +5,22 @@ This repository contains a scripts to deploy a set of common DevOps tools to a K
 ## Pre-requisites
 
 1) The following CLIs must be installed and mapped to the system path.
+   - [docker](https://docs.docker.com/install/)
    - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
    - [helm](https://helm.sh/)
    - [uaac](https://github.com/cloudfoundry/cf-uaac) - only required if you plan to integrate with PAS/PKS.
 
-2) The `kubectl` context must be set to the cluster to which the tools should be deployed.
+2) If the private registry you plan to use is using a self-signed certificate make sure it is set as an insecure registry on Docker.
+   - https://docs.docker.com/registry/insecure/
+   - https://github.com/Juniper/contrail-docker/wiki/Configure-docker-service-to-use-insecure-registry
+
+3) The `kubectl` context must be set to the cluster to which the tools should be deployed.
+
+4) The [Helm push plugin](https://github.com/chartmuseum/helm-push) must be installed to push Helm charts to the private registry.
+
+    ```
+    helm plugin install https://github.com/chartmuseum/helm-push
+    ```
 
 ## Tools
 
