@@ -28,7 +28,7 @@ This repository contains a scripts to deploy a set of common DevOps tools to a K
 
 ```
 USAGE: download.sh [ -r|--registry <REGISTRY_DNS> ] \
-                   [ -u|--user <USER_NAME> ] [ -p|--password <PASSWORD> ] \
+                   [ -u|--user <USER_NAME> -p|--password <PASSWORD> ] \
                    [ -c|--clean ] [ -d|--download-only ]
 
     This utility will download all required artifacts to set up the devops tools. It will

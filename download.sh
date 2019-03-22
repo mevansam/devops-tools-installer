@@ -6,7 +6,7 @@ set -e
 
 usage () {
     echo -e "\nUSAGE: download.sh [ -r|--registry <REGISTRY_DNS> ] \\"
-    echo -e "                   [ -u|--user <USER_NAME> ] [ -p|--password <PASSWORD> ] \\" 
+    echo -e "                   [ -u|--user <USER_NAME> -p|--password <PASSWORD> ] \\" 
     echo -e "                   [ -c|--clean ] [ -d|--download-only ]\n"
     echo -e "    This utility will download all required artifacts to set up the devops tools. It will"
     echo -e "    upload them to a private registry such as Harbor. Downloaded images and charts will"
