@@ -193,6 +193,8 @@ download_images \
 concourse_chart_version=${CONCOURSE_CHART_VERSION:-5.0.0}
 postgresql_chart_version=${POSTGRESQL_CHART_VERSION:-3.15.0}
 artifactory_chart_version=${ARTIFACTORY_CHART_VERSION:-7.12.16}
+redis_chart_version=${REDIS_CHART_VERSION:-6.4.3}
+minio_chart_version=${MINIO_CHART_VERSION:-2.4.9}
 spinnaker_chart_version=${SPINNAKER_CHART_VERSION:-1.8.1}
 
 helm init --client-only >/dev/null 2>&1
@@ -212,6 +214,8 @@ download_charts \
     stable/concourse:${concourse_chart_version}
     stable/postgresql:${postgresql_chart_version}
     jfrog/artifactory:${artifactory_chart_version}
+    stable/redis:${redis_chart_version}
+    stable/minio:${minio_chart_version}
     stable/spinnaker:${spinnaker_chart_version}
   " \
   "$chart_download_dir" \
