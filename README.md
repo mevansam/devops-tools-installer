@@ -27,22 +27,6 @@ This repository contains a scripts to deploy a set of common DevOps tools to a K
 ### download.sh
 
 ```
-USAGE: download.sh -r|--registry <REGISTRY_DNS> \
-                   -u|--user <USER_NAME> [ -p|--password <PASSWORD> ] [ -c|--clean ]
-
-    This utility will download all required artifacts to set up the devops tools. It will
-    upload them to a private registry such as Harbor. Downloaded images and charts will
-    be saved locally and re-used for off-line installs.
-
-    -r|--registry <REGISTRY_DNS>    The FQDN or IP of the registry.
-    -u|--user <USER_NAME>           The name of the user to use to authenticate with private registry
-    -p|--password <PASSWORD>        The password of the user.
-    -c|--clean <REGISTRY_DNS>       Upload clean images.
-```
-
-### install.sh
-
-```
 USAGE: download.sh [ -r|--registry <REGISTRY_DNS> ] \
                    [ -u|--user <USER_NAME> ] [ -p|--password <PASSWORD> ] \
                    [ -c|--clean ] [ -d|--download-only ]
@@ -58,4 +42,23 @@ USAGE: download.sh [ -r|--registry <REGISTRY_DNS> ] \
     -d|--download-only              Do not connect or upload to a private registy. Downloady only.
 
     Options --registry, --user and --password are required if --download-only flag is not provided
+```
+
+### install.sh
+
+```
+USAGE: install.sh -e|--environment <ENVIRONMENT> [ -i|--iaas <IAAS_NAME> -r|--registry <REGISTRY_DNS> ]
+
+    This utility will install the 'devops' tools using images and charts uploaded to the
+    given private registry. It will also deploy Helm's tiller container to the kubernetes
+    cluster if has not been deployed.
+
+    -e|--environment <ENVIRONMENT>  The namespace environment to deploy relelease engineering services to.
+    -i|--iaas <IAAS_NAME>           The underlying IAAS for allocating IAAS specific resource such as persistent volumes.
+    -r|--registry <REGISTRY_DNS>    The FQDN or IP of the registry.
+    -t|--tools <PRODUCT_LIST>       Comma separated list of tools to install or uninstall.
+                                    If not provided then all the tools will be deployed.
+    -u|--uninstall                  Uninstalls the tool.
+
+    Options --iaas and --registry are required for install.
 ```

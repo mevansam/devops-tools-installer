@@ -14,8 +14,8 @@ usage () {
     echo -e "    -r|--registry <REGISTRY_DNS>    The FQDN or IP of the registry."
     echo -e "    -t|--tools <PRODUCT_LIST>       Comma separated list of tools to install or uninstall."
     echo -e "                                    If not provided then all the tools will be deployed."
-    echo -e "    -u|--uninstall                  Uninstalls the tool."
-    echo -e ""
+    echo -e "    -u|--uninstall                  Uninstalls the tool.\n"
+    echo -e "    Options --iaas and --registry are required for install.\n"
 }
 
 create_uaa_client() {
@@ -80,9 +80,6 @@ if [[ -z $environment ||
   ( $action == install && (-z $iaas || -z $registry) ) ]]; then
 
   usage
-  if [[ $action == install ]]; then
-    echo -e "    Options --iaas and --registry are required for install.\n"
-  fi
   exit 1
 fi
 
