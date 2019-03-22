@@ -80,7 +80,7 @@ if [[ -z $environment ||
   ( $action == install && (-z $iaas || -z $registry) ) ]]; then
 
   usage
-  if [[ -z $uninstall ]]; then
+  if [[ $action == install ]]; then
     echo -e "    Options --iaas and --registry are required for install.\n"
   fi
   exit 1
