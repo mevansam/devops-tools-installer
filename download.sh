@@ -177,6 +177,7 @@ postgresql_chart_version=${POSTGRESQL_CHART_VERSION:-3.15.0}
 artifactory_chart_version=${ARTIFACTORY_CHART_VERSION:-7.12.16}
 spinnaker_chart_version=${SPINNAKER_CHART_VERSION:-1.8.1}
 
+helm init --client-only
 helm repo add jfrog https://charts.jfrog.io/
 helm repo add \
   --ca-file $ca_cert_file --username $user --password $password \

@@ -129,13 +129,11 @@ uninstall() {
 case "$1" in
   install)
     install
-    exit 0
     ;;
   uninstall)
     uninstall
-    exit 0
     ;;
+  *)
+    echo "ERROR! Invalid invocation of install script."
+    exit 1
 esac
-
-echo "ERROR! Invalid invocation of install script."
-exit 1

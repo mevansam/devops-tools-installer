@@ -5,12 +5,12 @@ script_dir=$(cd $(dirname $0) && pwd)
 set -e
 
 usage () {
-    echo -e "\nUSAGE: install.sh -i|--iaas <IAAS_NAME> -e|--environment <ENVIRONMENT> -r|--registry <REGISTRY_DNS>\n"
+    echo -e "\nUSAGE: install.sh -e|--environment <ENVIRONMENT> [ -i|--iaas <IAAS_NAME> -r|--registry <REGISTRY_DNS> ]\n"
     echo -e "    This utility will install the 'devops' tools using images and charts uploaded to the"
     echo -e "    given private registry. It will also deploy Helm's tiller container to the kubernetes"
     echo -e "    cluster if has not been deployed.\n"
-    echo -e "    -i|--iaas <IAAS_NAME>           The underlying IAAS for allocating IAAS specific resource such as persistent volumes."
     echo -e "    -e|--environment <ENVIRONMENT>  The namespace environment to deploy relelease engineering services to."
+    echo -e "    -i|--iaas <IAAS_NAME>           The underlying IAAS for allocating IAAS specific resource such as persistent volumes."
     echo -e "    -r|--registry <REGISTRY_DNS>    The FQDN or IP of the registry."
     echo -e "    -t|--tools <PRODUCT_LIST>       Comma separated list of tools to install or uninstall."
     echo -e "                                    If not provided then all the tools will be deployed."
@@ -39,6 +39,7 @@ create_uaa_client() {
       --redirect_uri "${CONCOURSE_EXTERNAL_URL}/sky/issuer/callback"
 }
 
+action=install
 while [[ $# -gt 0 ]]; do
   case "$1" in
     '-?'|--help|help)
@@ -60,6 +61,13 @@ while [[ $# -gt 0 ]]; do
       registry=$2
       shift
       ;;
+    -t|--tools)
+      tools=$2
+      shift
+      ;;
+    -u|--uninstall)
+      action=uninstall
+      ;;
     *)
       usage
       exit 1
@@ -68,11 +76,13 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
-if [[ -z $iaas \
-  || -z $environment \
-  || -z $registry ]]; then
+if [[ -z $environment ||
+  ( $action == install && (-z $iaas || -z $registry) ) ]]; then
 
   usage
+  if [[ -z $uninstall ]]; then
+    echo -e "    Options --iaas and --registry are required for install.\n"
+  fi
   exit 1
 fi
 
@@ -84,26 +94,13 @@ if [[ ! -e $ca_cert_file ]]; then
   exit 1
 fi
 
-case "$iaas" in
-  google)
-    ;;
-  vsphere)
-    if [[ -n $VSPHERE_DATASTORE ]]; then
-      echo -e "\nERROR! Please provide the vsphere data store to use for persistent\n"
-      echo -e "         volumes via 'VSPHERE_DATASTORE' environment variable.\n"
-      exit 1
-    fi
-    ;;
-  *)
-    echo -e "\nERROR! IAAS must be one of 'google' or 'vsphere'.\n"
-    exit 1
-esac
+if [[ -z $tools ]]; then
+  tools="concourse,artifactory"
+fi
 
 ###############
 # Common Values
 ###############
-
-helm_deployments=$(helm list)
 
 postgresql_image_version=${POSTGRESQL_IMAGE_VERSION:-11.2.0}
 postgresql_chart_version=${POSTGRESQL_CHART_VERSION:-3.15.0}
@@ -123,6 +120,28 @@ eval "echo \"$(cat ${common_config}/namespace.yml)\"" \
 
 # Create common k8s and helm resources
 
+if [[ -z `kubectl get pods -n kube-system | awk '/^tiller-/{ print $1 }'` ]]; then
+  # Install tiller offline
+  # https://github.com/helm/helm/issues/4540
+
+  tiller_version=${TILLER_VERSION:-v2.13.0}
+
+  echo -e "\n*** Resetting helm..."
+  kubectl delete \
+    -f ${common_config}/tiller-service-account.yml \
+    >/dev/null 2>&1
+  helm reset --force
+
+  echo -e "\n*** Initializing helm.."
+  helm init \
+    --tiller-image ${registry}/releng/tiller:${tiller_version}
+
+  kubectl create \
+    -f ${common_config}/tiller-service-account.yml
+else
+  helm init --client-only >/dev/null 2>&1
+fi
+
 if [[ -z `kubectl get namespaces | awk "/^${environment} /{ print \$1 }"` ]]; then
   kubectl create \
     --filename ${install_config}/namespace.yml
@@ -131,8 +150,25 @@ if [[ -z `kubectl get namespaces | awk "/^${environment} /{ print \$1 }"` ]]; th
   kubectl set subject clusterrolebinding tiller --serviceaccount=${environment}:default
 fi
 
-# Install Concourse Helm chart
-# source ${script_dir}/install-concourse.sh install
+if [[ $action == install ]]; then
+  case "$iaas" in
+    google)
+      ;;
+    vsphere)
+      if [[ -n $VSPHERE_DATASTORE ]]; then
+        echo -e "\nERROR! Please provide the vsphere data store to use for persistent\n"
+        echo -e "         volumes via 'VSPHERE_DATASTORE' environment variable.\n"
+        exit 1
+      fi
+      ;;
+    *)
+      echo -e "\nERROR! IAAS must be one of 'google' or 'vsphere'.\n"
+      exit 1
+  esac
 
-# Install Artifactory Helm chart
-source ${script_dir}/install-artifactory.sh install
+  helm_deployments=$(helm list)
+fi
+
+for t in $(echo $tools | sed 's|,| |g'); do
+  eval "source ${script_dir}/install-$t.sh $action"
+done
