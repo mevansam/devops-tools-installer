@@ -9,7 +9,7 @@ usage () {
     echo -e "    This utility will install the 'devops' tools using images and charts uploaded to the"
     echo -e "    given private registry. It will also deploy Helm's tiller container to the kubernetes"
     echo -e "    cluster if has not been deployed.\n"
-    echo -e "    -e|--environment <ENVIRONMENT>  The namespace environment to deploy relelease engineering services to."
+    echo -e "    -e|--environment <ENVIRONMENT>  The namespace environment to deploy devops tools to."
     echo -e "    -i|--iaas <IAAS_NAME>           The underlying IAAS for allocating IAAS specific resource such as persistent volumes."
     echo -e "    -r|--registry <REGISTRY_DNS>    The FQDN or IP of the registry."
     echo -e "    -t|--tools <PRODUCT_LIST>       Comma separated list of tools to install or uninstall."

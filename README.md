@@ -53,7 +53,7 @@ USAGE: install.sh -e|--environment <ENVIRONMENT> [ -i|--iaas <IAAS_NAME> -r|--re
     given private registry. It will also deploy Helm's tiller container to the kubernetes
     cluster if has not been deployed.
 
-    -e|--environment <ENVIRONMENT>  The namespace environment to deploy relelease engineering services to.
+    -e|--environment <ENVIRONMENT>  The namespace environment to deploy devops tools to.
     -i|--iaas <IAAS_NAME>           The underlying IAAS for allocating IAAS specific resource such as persistent volumes.
     -r|--registry <REGISTRY_DNS>    The FQDN or IP of the registry.
     -t|--tools <PRODUCT_LIST>       Comma separated list of tools to install or uninstall.
