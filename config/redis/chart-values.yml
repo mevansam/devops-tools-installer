@@ -1,0 +1,11 @@
+---
+image:
+  registry: ${registry}
+  repository: releng/redis
+  tag: ${redis_image_version}
+
+password: ${redis_password}
+
+persistence:
+  existingClaim: ${redis_instance_name}
+

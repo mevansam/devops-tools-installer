@@ -99,16 +99,22 @@ fi
 # Common Values
 ###############
 
-postgresql_image_version=${POSTGRESQL_IMAGE_VERSION:-11.2.0}
-postgresql_chart_version=${POSTGRESQL_CHART_VERSION:-3.15.0}
-
-postgresql_pvc_size=${POSTGRESQL_VOLUME_SIZE:-50Gi}
-
-postgresql_config=${script_dir}/config/postgresql
-
 install_config=${script_dir}/.install
 common_config=${script_dir}/config/common
 mkdir -p $install_config
+
+postgresql_image_version=${POSTGRESQL_IMAGE_VERSION:-11.2.0}
+postgresql_chart_version=${POSTGRESQL_CHART_VERSION:-3.15.0}
+postgresql_config=${script_dir}/config/postgresql
+
+redis_image_version=${REDIS_IMAGE_VERSION:-5.0.4}
+redis_chart_version=${REDIS_CHART_VERSION:-6.4.3}
+redis_config=${script_dir}/config/redis
+
+minio_image_version=${MINIO_IMAGE_VERSION:-RELEASE.2019-03-20T22-38-47Z}
+minio_mc_image_version=${MINIO_MC_IMAGE_VERSION:-RELEASE.2019-03-20T21-29-03Z}
+minio_chart_version=${MINIO_CHART_VERSION:-2.4.9}
+minio_config=${script_dir}/config/minio
 
 # Interpolate common k8s and helm resource declaration files
 

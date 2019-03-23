@@ -55,6 +55,8 @@ install() {
   concourse_chart_version=${CONCOURSE_CHART_VERSION:-5.0.0}
 
   pgsql_instance_name=concourse-db
+  postgresql_pvc_size=${POSTGRESQL_VOLUME_SIZE:-50Gi}
+
   db_user=concourse
   db_password=concourse
   db_name=concourse

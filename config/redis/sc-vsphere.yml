@@ -1,0 +1,9 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: ${redis_instance_name}
+provisioner: kubernetes.io/vsphere-volume
+parameters:
+  datastore: ${VSPHERE_DATASTORE}
+  diskformat: thin
+  fstype: ext3

@@ -165,6 +165,7 @@ artifactory_image_version=${ARTIFACTORY_IMAGE_VERSION:-6.8.7}
 artifactory_nginx_image_version=${ARTIFACTORY_NGINX_IMAGE_VERSION:-6.8.7}
 redis_image_version=${REDIS_IMAGE_VERSION:-5.0.4}
 minio_image_version=${MINIO_IMAGE_VERSION:-RELEASE.2019-03-20T22-38-47Z}
+minio_mc_image_version=${MINIO_MC_IMAGE_VERSION:-RELEASE.2019-03-20T21-29-03Z}
 halyard_image_version=${HALYARD_IMAGE_VERSION:-1.17.0}
 
 image_download_dir=${script_dir}/.downloads/images
@@ -182,6 +183,7 @@ download_images \
     docker.bintray.io/jfrog/nginx-artifactory-pro:${artifactory_nginx_image_version}
     bitnami/redis:${redis_image_version}
     minio/minio:${minio_image_version}
+    minio/mc:${minio_mc_image_version}
     gcr.io/spinnaker-marketplace/halyard:${halyard_image_version}
   " \
   "$image_download_dir" \

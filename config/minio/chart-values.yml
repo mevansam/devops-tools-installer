@@ -1,0 +1,18 @@
+---
+image:
+  repository: ${registry}/releng/minio
+  tag: ${minio_image_version}
+
+mcImage:
+  repository: ${registry}/releng/mc
+  tag: ${minio_mc_image_version}
+
+accessKey: "${minio_access_key}"
+secretKey: "${minio_secret_key}"
+
+persistence:
+  existingClaim: ${minio_instance_name}
+
+defaultBucket:
+  enabled: true
+  name: spinnaker

@@ -1,0 +1,13 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ${redis_instance_name}
+  namespace: ${environment}
+  annotations:
+    volume.beta.kubernetes.io/storage-class: ${redis_instance_name}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: ${redis_pvc_size}

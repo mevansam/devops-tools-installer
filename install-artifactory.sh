@@ -22,12 +22,14 @@ install() {
   artifactory_nginx_image_version=${ARTIFACTORY_NGINX_IMAGE_VERSION:-6.8.7}
   artifactory_chart_version=${ARTIFACTORY_CHART_VERSION:-7.12.13}
 
-  artifactory_pvc_size=20Gi
-
   pgsql_instance_name=artifactory-db
+  postgresql_pvc_size=${POSTGRESQL_VOLUME_SIZE:-50Gi}
+
   db_user=artifactory
   db_password=artifactory
   db_name=artifactory
+
+  artifactory_pvc_size=${ARTIFACTORY_PVC_SIZE:-20Gi}
 
   # Artifactory Install Paths
 

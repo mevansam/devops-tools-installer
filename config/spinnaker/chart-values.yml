@@ -1,31 +1,25 @@
 ---
-initContainerImage: ${registry}/releng/alpine:${alpine_image_version}
-
-logger:
+halyard:
+  spinnakerVersion: ${spinnaker_app_version}
   image:
-    repository: ${registry}/releng/busybox
-    tag: ${busybox_image_version}
+    repository: ${registry}/releng/halyard
+    tag: ${halyard_image_version}
 
-artifactory:
-  name: artifactory
-  image:
-    repository: ${registry}/releng/artifactory-oss
-    version: ${artifactory_image_version}
-  persistence:
-    existingClaim: artifactory
-
-nginx:
+ingress:
   enabled: true
-  image:
-    repository: ${registry}/releng/nginx-artifactory-pro
-    version: ${artifactory_nginx_image_version}
 
-postgresql:
+redis:
+  external:
+    host: ${redis_host}
+    port: ${redis_port}
+    password: ${redis_password}
+
+minio:
   enabled: false
 
-database:
-  type: ${postgresql}
-  host: ${pgsql_host}
-  port: ${pgsql_port}
-  user: ${db_user}
-  password: ${db_password}
+s3:
+  enabled: true
+  endpoint: "http://${minio_host}:${minio_port}"
+  accessKey: "${minio_access_key}"
+  secretKey: "${minio_secret_key}"
+  bucket: spinnaker
