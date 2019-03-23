@@ -18,7 +18,6 @@ install() {
 
   halyard_image_version=${HALYARD_IMAGE_VERSION:-1.17.0}
   spinnaker_chart_version=${SPINNAKER_CHART_VERSION:-1.8.1}
-  spinnaker_app_version=${SPINNAKER_APP_VERSION:-1.12.5}
 
   redis_instance_name=spinnakker-redis
   redis_pvc_size=${REDIS_PVC_SIZE:-8Gi}
@@ -29,6 +28,9 @@ install() {
 
   minio_access_key=6c5923MmK4
   minio_secret_key=VrphtZmm5m6LRT5xfeCkzavz
+
+  spinnaker_app_version=${SPINNAKER_APP_VERSION:-1.12.5}
+  spinnaker_external_host=${SPINNAKER_EXTERNAL_HOST:-}
 
   # Install Paths
 
