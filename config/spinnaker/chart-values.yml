@@ -5,17 +5,42 @@ halyard:
     repository: ${registry}/releng/halyard
     tag: ${halyard_image_version}
 
+dockerRegistries:
+- name: harbor
+  address: ${registry}
+  username: ${user}
+  password: ${password}
+
+kubeConfig:
+  enabled: ${upload_kubeconfig}
+  secretName: spinnaker-kubeconfig
+  secretKey: config
+  contexts: ${spinnakker_target_contexts}
+  deploymentContext: ${spinnaker_deployment_context}
+
 ingress:
   enabled: true
-  host: ${spinnaker_external_host}
+  host: spinnaker.${env_domain}
   annotations:
+    ingress.kubernetes.io/ssl-redirect: 'true'
     kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: 'true'
+  tls:
+  - secretName: nginx-ingress-tls
+    hosts:
+    - spinnaker.${env_domain}
 
 ingressGate:
   enabled: false
-  host: gate.${spinnaker_external_host}
+  host: spin-gate.${env_domain}
   annotations:
+    ingress.kubernetes.io/ssl-redirect: 'true'
     kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: 'true'
+  tls:
+  - secretName: nginx-ingress-tls
+    hosts:
+    - spin-gate.${env_domain}
 
 redis:
   external:

@@ -111,8 +111,8 @@ install() {
   concourse_install_config=${install_config}/config/concourse
   mkdir -p ${concourse_install_config}
 
-  concourse_web_tls_cert=$(cat ${script_dir}/.certs/concourse-ci.crt | sed "s|\(.*\)$|    \1|g")
-  concourse_web_tls_key=$(cat ${script_dir}/.certs/concourse-ci.key | sed "s|\(.*\)$|    \1|g")
+  concourse_web_tls_cert=$(cat ${script_dir}/.certs/platform-san.crt | sed "s|\(.*\)$|    \1|g")
+  concourse_web_tls_key=$(cat ${script_dir}/.certs/platform-san.key | sed "s|\(.*\)$|    \1|g")
 
   # Interpolate k8s and helm resource declaration files for postgresql chart
 

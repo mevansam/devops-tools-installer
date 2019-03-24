@@ -20,6 +20,9 @@ install() {
   defaultbackend_version=${DEFAULTBACKEND_VERSION:-1.4}
   nginx_ingress_chart_version=${NGINX_INGRESS_CHART_VERSION:-1.4.0}
 
+  nginx_ingress_tls_cert=$(cat ${script_dir}/.certs/platform-san.crt | base64)
+  nginx_ingress_tls_key=$(cat ${script_dir}/.certs/platform-san.key | base64)
+
   # NGINX-Ingress Install Paths
 
   nginx_ingress_config=${script_dir}/config/nginx-ingress
@@ -28,10 +31,21 @@ install() {
 
   # Interpolate k8s and helm resource declaration files for nginx_ingress chart
 
+  eval "echo \"$(cat ${nginx_ingress_config}/tls-cert-secret.yml)\"" \
+    > ${nginx_ingress_install_config}/tls-cert-secret.yml
   eval "echo \"$(cat ${nginx_ingress_config}/chart-values.yml)\"" \
     > ${nginx_ingress_install_config}/chart-values.yml
 
   # Create k8s and helm resources for nginx_ingress 
+
+  set +e
+  kubectl delete \
+    secret nginx-ingress-tls \
+    --namespace $environment >/dev/null 2>&1
+  set -e
+  
+  kubectl create \
+    --filename .install/config/nginx-ingress/tls-cert-secret.yml
 
   if [[ -z `echo -e "$helm_deployments" | awk '/^nginx-ingress\s+/{ print $1 }'` ]]; then
     echo -e "Installing nginx-ingress helm chart..."

@@ -3,9 +3,9 @@ controller:
   image:
     repository: ${registry}/releng/nginx-ingress-controller
     tag: ${nginx_ingress_controller_version}
-
-  service:
-    enableHttps: false
+  
+  extraArgs:
+    default-ssl-certificate: "${environment}/nginx-ingress-tls"
 
 defaultBackend:
   image:

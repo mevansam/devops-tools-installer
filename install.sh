@@ -5,17 +5,21 @@ script_dir=$(cd $(dirname $0) && pwd)
 set -e
 
 usage () {
-    echo -e "\nUSAGE: install.sh -e|--environment <ENVIRONMENT> [ -i|--iaas <IAAS_NAME> -r|--registry <REGISTRY_DNS> ]\n"
+    echo -e "\nUSAGE: install.sh -e|--environment <ENVIRONMENT> \\"
+    echo -e "                  [ -i|--iaas <IAAS_NAME> -r|--registry <REGISTRY_DNS> -u|--user <USER_NAME> -p|--password <PASSWORD> ] \\"
+    echo -e "                  [ -t|--tools <PRODUCT_LIST> ] [ -x|--uninstall ]\n"
     echo -e "    This utility will install the 'devops' tools using images and charts uploaded to the"
     echo -e "    given private registry. It will also deploy Helm's tiller container to the kubernetes"
     echo -e "    cluster if has not been deployed.\n"
     echo -e "    -e|--environment <ENVIRONMENT>  The namespace environment to deploy devops tools to."
     echo -e "    -i|--iaas <IAAS_NAME>           The underlying IAAS for allocating IAAS specific resource such as persistent volumes."
     echo -e "    -r|--registry <REGISTRY_DNS>    The FQDN or IP of the registry."
+    echo -e "    -u|--user <USER_NAME>           The name of the user to use to authenticate with private registry"
+    echo -e "    -p|--password <PASSWORD>        The password of the user."
     echo -e "    -t|--tools <PRODUCT_LIST>       Comma separated list of tools to install or uninstall."
     echo -e "                                    If not provided then all the tools will be deployed."
-    echo -e "    -u|--uninstall                  Uninstalls the tool.\n"
-    echo -e "    Options --iaas and --registry are required for install.\n"
+    echo -e "    -x|--uninstall                  Uninstalls the tool.\n"
+    echo -e "    Options --iaas, --registry, --username and --password are required for install.\n"
 }
 
 create_uaa_client() {
@@ -61,11 +65,19 @@ while [[ $# -gt 0 ]]; do
       registry=$2
       shift
       ;;
+    -u|--user)
+      user=$2
+      shift
+      ;;
+    -p|--password)
+      password=$2
+      shift
+      ;;
     -t|--tools)
       tools=$2
       shift
       ;;
-    -u|--uninstall)
+    -x|--uninstall)
       action=uninstall
       ;;
     *)
@@ -76,8 +88,12 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
-if [[ -z $environment ||
-  ( $action == install && (-z $iaas || -z $registry) ) ]]; then
+if [[ -z $environment \
+  || ( $action == install \
+    && ( -z $iaas \
+      || -z $registry \
+      || -z $user \
+      || -z $password ) ) ]]; then
 
   usage
   exit 1
@@ -92,7 +108,7 @@ if [[ ! -e $ca_cert_file ]]; then
 fi
 
 if [[ -z $tools ]]; then
-  tools="concourse,artifactory"
+  tools="nginx-ingress,concourse,artifactory,spinnaker"
 fi
 
 ###############
@@ -102,6 +118,8 @@ fi
 install_config=${script_dir}/.install
 common_config=${script_dir}/config/common
 mkdir -p $install_config
+
+env_domain=${ENV_DOMAIN:-}
 
 postgresql_image_version=${POSTGRESQL_IMAGE_VERSION:-11.2.0}
 postgresql_chart_version=${POSTGRESQL_CHART_VERSION:-3.15.0}
