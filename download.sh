@@ -157,6 +157,8 @@ fi
 # Download and upload docker images
 
 tiller_version=${TILLER_VERSION:-v2.13.0}
+nginx_ingress_controller_version=${NGINX_INGRESS_CONTROLLER_VERSION:-0.23.0}
+defaultbackend_version=${DEFAULTBACKEND_VERSION:-1.4}
 alpine_image_version=${ALPINE_IMAGE_VERSION:-3.8}
 busybox_image_version=${BUSYBOX_IMAGE_VERSION:-1.30.1 }
 concourse_image_version=${CONCOURSE_IMAGE_VERSION:-5.0.0}
@@ -174,6 +176,8 @@ mkdir -p $image_download_dir
 download_images \
   "
     gcr.io/kubernetes-helm/tiller:${tiller_version}
+    quay.io/kubernetes-ingress-controller/nginx-ingress-controller:${nginx_ingress_controller_version}
+    k8s.gcr.io/defaultbackend:${defaultbackend_version}
     alpine:${alpine_image_version}
     busybox:${busybox_image_version}
     concourse/concourse:${concourse_image_version}
@@ -192,6 +196,7 @@ download_images \
 
 # Download and upload helm charts
 
+nginx_ingress_chart_version=${NGINX_INGRESS_CHART_VERSION:-1.4.0}
 concourse_chart_version=${CONCOURSE_CHART_VERSION:-5.0.0}
 postgresql_chart_version=${POSTGRESQL_CHART_VERSION:-3.15.0}
 artifactory_chart_version=${ARTIFACTORY_CHART_VERSION:-7.12.16}
@@ -213,6 +218,8 @@ mkdir -p $chart_download_dir
 
 download_charts \
   "
+    stable/nginx-ingress:${nginx_ingress_chart_version}
+    stable/concourse:${concourse_chart_version}
     stable/concourse:${concourse_chart_version}
     stable/postgresql:${postgresql_chart_version}
     jfrog/artifactory:${artifactory_chart_version}

@@ -8,6 +8,14 @@ halyard:
 ingress:
   enabled: true
   host: ${spinnaker_external_host}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+
+ingressGate:
+  enabled: false
+  host: gate.${spinnaker_external_host}
+  annotations:
+    kubernetes.io/ingress.class: nginx
 
 redis:
   external:

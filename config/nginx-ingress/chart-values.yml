@@ -1,0 +1,13 @@
+---
+controller:
+  image:
+    repository: ${registry}/releng/nginx-ingress-controller
+    tag: ${nginx_ingress_controller_version}
+
+  service:
+    enableHttps: false
+
+defaultBackend:
+  image:
+    repository: ${registry}/releng/defaultbackend
+    tag: ${defaultbackend_version}
