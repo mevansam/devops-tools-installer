@@ -26,21 +26,24 @@ create_uaa_client() {
 
   uaa_url=$1
   admin_client_secret=$2
-  scopes=$3
+  client_id=$3
+  client_secret=$4
+  scopes=$5
+  redirect_uri=$6
 
   uaac target --skip-ssl-validation $uaa_url
   uaac token client get admin -s $admin_client_secret
 
-  uaac client get concourse  >/dev/null 2>&1 || \
-    uaac client add concourse \
-      --name concourse \
-      --secret "$CONCOURSE_CLIENT_SECRET" \
+  uaac client get $client_id  >/dev/null 2>&1 || \
+    uaac client add $client_id \
+      --name "$client_id" \
+      --secret "$client_secret" \
       --scope "$scopes" \
       --authorities uaa.none \
       --authorized_grant_types authorization_code,refresh_token,password \
       --access_token_validity 3600 \
       --refresh_token_validity 7200 \
-      --redirect_uri "${CONCOURSE_EXTERNAL_URL}/sky/issuer/callback"
+      --redirect_uri "$redirect_uri"
 }
 
 action=install
@@ -107,10 +110,6 @@ if [[ ! -e $ca_cert_file ]]; then
   exit 1
 fi
 
-if [[ -z $tools ]]; then
-  tools="nginx-ingress,concourse,artifactory,spinnaker"
-fi
-
 ###############
 # Common Values
 ###############
@@ -148,9 +147,11 @@ if [[ -z `kubectl get pods -n kube-system | awk '/^tiller-/{ print $1 }'` ]]; th
   tiller_version=${TILLER_VERSION:-v2.13.0}
 
   echo -e "\n*** Resetting helm..."
+  set +e
   kubectl delete \
     -f ${common_config}/tiller-service-account.yml \
     >/dev/null 2>&1
+  set -e
   helm reset --force
 
   echo -e "\n*** Initializing helm.."

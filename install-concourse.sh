@@ -23,7 +23,10 @@ install() {
       create_uaa_client \
         "$PAS_UAA_URL" \
         "$PAS_UAA_ADMIN_CLIENT_SECRET" \
-        "openid,email,profile,cloud_controller.read"
+        "concourse" \
+        "$CONCOURSE_CLIENT_SECRET" \
+        "openid,email,profile,cloud_controller.read" \
+        "${CONCOURSE_EXTERNAL_URL}/sky/issuer/callback"
 
       CF_AUTH_ENABLED=true
       CF_API_URL=$(echo "$PAS_UAA_URL" | sed 's|https://uaa\.|https://api.|')
@@ -36,7 +39,10 @@ install() {
       create_uaa_client \
         "$PKS_UAA_URL" \
         "$PKS_UAA_ADMIN_CLIENT_SECRET" \
-        "openid,email,profile"
+        "concourse" \
+        "$CONCOURSE_CLIENT_SECRET" \
+        "openid,email,profile" \
+        "${CONCOURSE_EXTERNAL_URL}/sky/issuer/callback"
 
       OATH_ENABLED=true
       OATH_DISPLAY_NAME="PKS"
@@ -194,6 +200,11 @@ uninstall() {
   helm delete --purge concourse-ci
   kubectl delete namespace concourse-ci-main
   kubectl delete storageclass concourse-ci
+
+  # Ensure all related persistent volume claims are deleted
+  kubectl get persistentvolumes --namespace $environment \
+    | awk '/-concourse-/{ print substr($6, index($6,"/")+1) }' \
+    | xargs kubectl delete persistentvolumeclaim --namespace $environment
 
   set -e
 }
